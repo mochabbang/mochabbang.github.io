@@ -1,0 +1,1047 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>2.Next.js 기초와 내장 컴포넌트</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-interactiveBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="ffed2563-2c92-4944-9d93-f79da5c0809a" class="page sans"><header><h1 class="page-title">2.Next.js 기초와 내장 컴포넌트</h1><p class="page-description"></p></header><div class="page-body"><hr id="a02c7e24-0855-41d7-8af8-dcc1c9c5e1b1"/><nav id="464ff00b-8099-4d9c-9160-6c283f2ad6ef" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#e74eac31-9933-4a30-b45a-6124c37253ce">#1. 라우팅 시스템</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#15952c1c-004a-4cc6-909d-0398d327219e">1. <strong>파일기반 페이지”와 “라우팅</strong></a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#355b9e50-0694-468a-8bb6-6cbbf0236f2e">2. 동적 라우팅 규칙</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#28a03f1b-4648-4957-a7ad-ffdeb2ed52ee">3. 페이지에서 경로 매개변수 사용하기</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#f1f22ddf-a44f-4d11-85b1-c9eea3ccb89c">4. 컴포넌트에서 경로 매개변수 사용하기</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#4496bd0e-8c31-4bf4-991a-25bfad068777">5. 클라이언트에서의 내비게이션</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#a22f8c17-a315-4dc2-88a6-a96eb22923bc">#2. 정적 자원 제공</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#da5713e6-a06a-46de-bcf0-810a0a40af6b">1. 자동이미지 최적화(Image 컴포넌트)</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#1ae625b8-2060-483f-928a-934702489b1f">2. 메타데이터</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#5caa98ff-9bbb-4669-ac01-1f83555ded85">#3. _app.js와 _document.js 페이지 커스터마이징</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#483e6675-6a81-46d8-a957-7568855af10e">1. _app.js</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#d3eeb4b3-00a5-443b-84da-793e06e6b3a6">2. _document.js</a></div></nav><h2 id="e74eac31-9933-4a30-b45a-6124c37253ce" class="">#1. 라우팅 시스템</h2><hr id="b66925d3-ff4b-469b-9d4b-9333a75d88ab"/><figure class="block-color-blue_background callout" style="white-space:pre-wrap;display:flex" id="43c41995-1a5c-45a1-a84a-ef69609ca1bd"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Next.js 프로젝트를 생성하게 될 경우에 기본적으로 app디렉터리가 제공되어진다.
+이전 버전의 경우에는 page디렉터리가 기본설정이였으나, <span style="border-bottom:0.05em solid">공유 레이아웃, 중첩 라우팅, 로드상태, 오류처리를 지원하는 app router를 13버전에서 부터 도입해 사용하고있다</span>.
+
+page 디렉터리는 증분용으로 사용되어진다.
+
+<strong>* app, page디렉터리가 두개가 있을 경우 우선순위는 app이 가지고 간다!</strong></div></figure><p id="36003e0c-5b86-4db6-beb6-5aad39203ad9" class="">
+</p><p id="465f926b-77c9-4b93-8cfb-bbc10e1c7549" class="">리액트의 경우에는 라우팅 작업을 주로 React Router 라이브러리를 통해서 진행했다.</p><p id="0dba3b19-bc7f-4e2f-a457-e7093121752b" class="">이 라이브러리는 클라이언트에서의 라우팅만 구현할 수 있고, 모든 페이지가 클라이언트에서만 만들어지고 렌더링 된다.
+서버에서의 개입이 없다.</p><p id="5119b245-2771-4c78-848f-70ac0fa77316" class="">
+</p><h3 id="15952c1c-004a-4cc6-909d-0398d327219e" class="">1. <strong>파일기반 페이지”와 “라우팅</strong></h3><p id="8709ba08-38cc-43d9-a6f2-1481c2a7db79" class="">Next.js에서는 다른 방법인 <span style="border-bottom:0.05em solid"><strong>“파일기반 페이지”와 “라우팅”</strong></span>을 이용한다!</p><p id="1c636e5a-7410-4bf1-b2b3-6219007e5e73" class="">Next.js프로젝트는 기본적으로 pages, app 디렉터리를 가지고 있으며, 이 디렉터리 안의 모든 파일은 곧 애플리케이션의 페이지와 라우팅 규칙을 의미한다!</p><pre id="e1396f4b-a5ee-424b-8375-83b1eb4e7eaf" class="code"><code>function Homepage() {
+  return &lt;div&gt;This is the homepage&lt;/div&gt;;
+}
+
+export default Homepage;</code></pre><p id="49fece1b-fd9f-4820-80ff-63dd5e8c92f6" class="">위와 같이 구성 후 코드 작성을 통해 실행을 하게 될 경우 해당 페이지로 연결된다.
+index.js는 식상할 수 있으니 contacts.js를 통해 구성 후 ‘http://localhost:3000/contacts’ 호출하게 될 경우 해당 페이지로 호출된다.</p><figure class="block-color-blue_background callout" style="white-space:pre-wrap;display:flex" id="1fbec456-413d-4aee-9422-9b4900876cc1"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">즉 리액트라우터의 Link &amp; Routes의 부가적인 작업을 안하고 페이지로 이동하는 ASP.NET과 비슷하다.</div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="e30e5950-3995-42c1-ba1c-c35050c6363e"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Nextjs 13버전에서는 자식노드의  a태그는 인식하지않고 오류로 대체한다. 12버전을 사용하고싶다면 legarcyBehavior 속성 이용한다. 13에서는 link컴포넌트가 a태그</div></figure><p id="82829f80-2020-4980-baac-d2140a635f0b" class="">
+</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="90352119-5c3d-4075-9b9a-411109eb393c"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">link/router는 페이지 이동시 CSR을 활용하며, 불필요한 리소스 낭비 방지하기위해 해당 영역에 존재하는 리소스를 불러온다.</div></figure><h3 id="355b9e50-0694-468a-8bb6-6cbbf0236f2e" class="">2. 동적 라우팅 규칙</h3><ul id="fb6ab2c9-cb49-4383-adb9-7d25a1878657" class="bulleted-list"><li style="list-style-type:disc"><strong>경로 매개변수</strong><ul id="15c32db5-7267-4f3d-bd6f-90de4e67f3b0" class="bulleted-list"><li style="list-style-type:circle">웹 사이트에 새로운 글을 쓸 때마다 수동으로 새 페이지를 만들지 않도록 설정해준다!</li></ul><ul id="1cc6d393-582d-4d77-9d81-4b4e06f8bfdb" class="bulleted-list"><li style="list-style-type:circle">사용자가 브라우저 주소창에 주소와 파라미터를 값을 입력할 경우 그 값에 대한 화면이 표시되어진다.</li></ul><ul id="52daa1e9-a140-4710-aade-e3a188b75363" class="bulleted-list"><li style="list-style-type:circle">디렉터리 내부에 동적 라우팅 규칙을 중첩할 수 도 있다.</li></ul><ul id="efbf68db-1f0f-48df-b25f-b217763d6a3f" class="bulleted-list"><li style="list-style-type:circle">실제 애플리케이션에서는 경로 매개변수에 따라 서로 다른 동적 페이지를 렌더링해야 한다.</li></ul></li></ul><h3 id="28a03f1b-4648-4957-a7ad-ffdeb2ed52ee" class="">3. 페이지에서 경로 매개변수 사용하기</h3><ul id="7aae979e-1d56-4463-a762-ec2b3b58bbab" class="bulleted-list"><li style="list-style-type:disc">소스상에서 매개변수를 호출하는 .js파일을 구성한다.
+(책에서는 \greet\[name].js 로 구성했다.)<figure id="c278091c-a66a-47dc-9ad8-aaaff3dedef1" class="image"><a href="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled.png"><img style="width:422px" src="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled.png"/></a></figure><pre id="3d70b10a-5e23-4b1d-93c6-83d938901060" class="code"><code>/* \greet\[name].js 파일 */
+export async function getServerSideProps({ params }) {
+  const { name } = params;
+
+  return {
+    props: {
+      name,
+    },
+  };
+}
+
+function Greet(props) {
+  return &lt;h1&gt;Hello, {props.name}!&lt;/h1&gt;;
+}
+
+export default Greet;</code></pre><p id="41f78769-eba8-4937-90d0-23124df59545" class="">yarn dev를 통해 실행 후 <a href="http://localhost:3000/greet/mocha로">http://localhost:3000/greet/mocha로</a> 하면 아래와 같은 페이지가 표시된다</p><figure id="78c42275-9477-456f-be08-9c2315d18436" class="image"><a href="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%201.png"><img style="width:868px" src="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%201.png"/></a></figure><figure class="block-color-blue_background callout" style="white-space:pre-wrap;display:flex" id="626377f9-ae20-4485-90a9-f72a8e6870d5"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">위 코드를 작성하게 될 경우 vscode에서 eslint오류를 발생시킨다. 
+(parsing error: cannot find module &#x27;next/babel’)
+아래와 같이 프로젝트에 구성하면 해당 오류를 제거할 수 있다.</div></figure><ol type="1" id="aa58f8c7-92ca-49d2-8038-08ed0ecd1df2" class="numbered-list" start="1"><li>프로젝트에 .babelrc 파일 추가</li></ol><pre id="fe24693b-bca9-4571-ae3d-ab9dad57f4d0" class="code"><code>{
+  &quot;presets&quot;: [&quot;next/babel&quot;],
+  &quot;plugins&quot;: []
+}</code></pre><ol type="1" id="e897448f-9753-470a-b542-05e840462197" class="numbered-list" start="2"><li>.eslint.json 파일에 문구 추가</li></ol><pre id="90b05a5a-5923-4f7d-ab4b-b3f9e410ec27" class="code"><code>{
+  &quot;extends&quot;: [&quot;next/babel&quot;, &quot;next/core-web-vitals&quot;]
+}</code></pre></li></ul><h3 id="f1f22ddf-a44f-4d11-85b1-c9eea3ccb89c" class="">4. 컴포넌트에서 경로 매개변수 사용하기</h3><ul id="53985d6a-1d7f-41c5-93f0-f176b89a5a68" class="bulleted-list"><li style="list-style-type:disc">getServerSideProps와 getStaticProps함수를 사용하지 못하는 범위에서는 어떻게 경로 매개변수를 컴포넌트에 사용할 수 있을지에 대해 보여준다.</li></ul><ul id="ab088c7f-4203-4fb6-be37-a78d51a1d107" class="bulleted-list"><li style="list-style-type:disc">nextjs에서 제공하는 useRouter 훅을 이용하여 쿼리파라미터들을 조회할 수 있다.</li></ul><pre id="2c7db8c9-64c7-4762-be61-3e33da884c9e" class="code"><code>// 2. 컴포넌트에서 경로 매개변수 사용하기
+import { useRouter } from &quot;next/router&quot;;
+
+function Greet() {
+  const { query } = useRouter();
+  console.log(query);
+
+  return &lt;h1&gt;Hello, {query.name}!&lt;/h1&gt;;
+}
+
+export default Greet;</code></pre><p id="118cca54-4f5d-4842-b565-d8a81e43dc4f" class="">
+</p><figure id="a1bb4223-7bae-4f3f-9e05-b4bea0c79588" class="image" style="text-align:left"><a href="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%202.png"><img style="width:288px" src="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%202.png"/></a></figure><ul id="bcabeb04-626b-4bf3-9ea5-ca3e04313b04" class="bulleted-list"><li style="list-style-type:disc">페이지경로의 매개변수 이외의 쿼리스트링을 추가로 작성하여 호출하게 될 경우에도 로그에 기록되어진다.</li></ul><p id="7e878bc1-206e-438d-aa82-a48148fe7077" class="">ex) <a href="http://localhost:3000/greet/mocha?learning_textjs=true">http://localhost:3000/greet/mocha?learning_textjs=true</a></p><figure id="e8482fc5-1ed0-44fb-8452-1d3e37dd3cca" class="image" style="text-align:left"><a href="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%203.png"><img style="width:520px" src="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%203.png"/></a></figure><ul id="89b201df-6761-4597-adbf-f5a4253d23b5" class="bulleted-list"><li style="list-style-type:disc">페이지 경로 매개변수와 쿼리스트링의 동일한 이름을 적게 될 경우에는 페이지 경로가 우선순위로 설정되어 먼저 표시되어진다. 그리고 파라미터의 동일 키 값으로 인해 쿼리스트링의 값은 무시되어진다.</li></ul><h3 id="4496bd0e-8c31-4bf4-991a-25bfad068777" class="">5. 클라이언트에서의 내비게이션</h3><p id="895fc6da-5511-4225-80fe-3cfc86178f67" class="">Next.js는 단순히 리액트 웹 애플리케이션을 서버에서 렌더링하려고 만든 프레임워크가 아니며,
+<span style="border-bottom:0.05em solid">다양한 기능을 비롯하여 웹 사이트 성능을 최적화 할 수 있는 많은 방법을 제공한다.</span></p><p id="829213d1-05b1-4378-86ae-fdf1dbfde03d" class="">그중 하나가 <strong>클라이언트에서 내비게이션</strong>을 처리하는 것이다.</p><ol type="1" id="ec37f385-2184-4cc5-ae9e-0ff5bafa2eb4" class="numbered-list" start="1"><li><strong>Link 컴포넌트를 이용하여 클라이언트에서 내비게이션 처리를 진행한다.</strong></li></ol><pre id="399c1f63-40ee-4851-8d74-05265308dc00" class="code"><code>import Link from &quot;next/link&quot;;
+
+function Navbar() {
+  return (
+    &lt;div&gt;
+      &lt;Link href=&quot;/posts&quot; preload=&quot;false&quot;&gt;
+        Post
+      &lt;/Link&gt;
+      &lt;Link href=&quot;/greet/mochabbang&quot;&gt;Greet&lt;/Link&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default Navbar;</code></pre><ul id="f67bd1c0-3df1-4999-8e6c-425356f23914" class="bulleted-list"><li style="list-style-type:disc">Next.js에서의 Link태그가 있는 페이지를 접속할 경우 Link에 연결된 부분 또는 페이지를 미리 읽어오도록 구성되어있다.
+(클릭 시 모든 데이터는 불러온 상태이므로 화면에 그려지는 작업만 진행)</li></ul><ul id="fe66a83b-e746-45cb-8429-5c1d8b39504d" class="bulleted-list"><li style="list-style-type:disc">이를 진행하고 싶지 않다면 preload속성을 이용하면 된다. 
+(책에서는 preload={false}를 하는 것으로 되어있지만 실제 실습에서는 아래와 같은 오류가 발생된다.)<figure id="001ddf23-683f-45b3-8fac-55571e0467e7" class="image"><a href="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%204.png"><img style="width:987px" src="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%204.png"/></a></figure></li></ul><ul id="d1ffb9da-456c-42b0-8253-0ca4fe1c9e71" class="bulleted-list"><li style="list-style-type:disc">복잡한 URL사용할 경우 href 속성에 객체를 전달할 수도 있다.</li></ul><pre id="ff0b91a6-c6a7-40df-b729-50d1e6212c33" class="code"><code>import Link from &quot;next/link&quot;;
+
+function Navbar() {
+  return (
+    &lt;div&gt;
+      &lt;Link href={{ pathname: &quot;/posts&quot; }} preload=&quot;false&quot;&gt;
+        Post
+      &lt;/Link&gt;
+      &lt;Link
+        href={{
+          pathname: &quot;/greet/[name]&quot;,
+          query: { name: &quot;mochabbang&quot;, foo: &quot;bar&quot; },
+        }}
+      &gt;
+        Greet
+      &lt;/Link&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default Navbar;</code></pre><figure class="block-color-blue_background callout" style="white-space:pre-wrap;display:flex" id="c6344061-3017-42f4-860a-62834378c3e8"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">동적 세그먼트에 연결할 때 리터럴 구문을 통해서도 구현이 가능하다.</div></figure><pre id="aa9f2a84-f7e4-45dd-8a5f-7f2a184eef62" class="code"><code>import Link from &#x27;next/link&#x27;
+ 
+export default function PostList({ posts }) {
+  return (
+    &lt;ul&gt;
+      {posts.map((post) =&gt; (
+        &lt;li key={post.id}&gt;
+          &lt;Link href={`/blog/${post.slug}`}&gt;{post.title}&lt;/Link&gt;
+        &lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  )
+}</code></pre><figure class="block-color-blue_background callout" style="white-space:pre-wrap;display:flex" id="4a89f5c8-914e-4189-add7-ff5836fea8ff"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Link태그 속성 중 scroll이라는 것이 있으며, 변경된 경로 세그먼트의 맨 위로 스크롤을 하는 작업을 한다. (한 페이지에서 다른 섹션으로 이동시에 사용)
+값은 true, false로 구분된다.</div></figure><ol type="1" id="20193fda-15a3-452d-9d1e-d4e626313ec4" class="numbered-list" start="2"><li><strong>router.push 메서드</strong></li></ol><p id="3b26fede-5a1d-451c-91f8-b881a2674ce7" class="">Link 컴포넌트 대신 useRouter 훅의 router.push 메서드를 통해 페이지 이동 할 수 있다.</p><pre id="11b7ce4f-4319-4ad0-b2b5-86bf9050849a" class="code"><code>import { useEffect } from &#x27;react&#x27;;
+import { useRouter } from &#x27;next/router&#x27;;
+import PrivateComponent from &#x27;../components/Private&#x27;;
+import useAuth from &#x27;../hooks/auth&#x27;;
+
+function MyPage() {
+	const router = useRouter();
+  const { loggedIn } = useAuth();
+
+	useEffect(() =&gt; {
+		if(!loggedIn) {
+			router.push(&#x27;/login&#x27;);
+		}
+	}, [loggedIn]);
+
+	return loggedIn ? &lt;PrivateComponent /&gt; : null;
+}
+
+export default MyPage;</code></pre><ul id="b2aeffc7-a345-4f54-a888-3b524dbd8a67" class="bulleted-list"><li style="list-style-type:disc">단 특정 상황이나 이벤트가 발생한 경우 클라이언트에서 사용자를 특정 페이지로 보낼 때 사용하는 것이 좋다!
+내비게이션 구현에 사용하는 것은 좋은 방법이 아니다!</li></ul><h2 id="a22f8c17-a315-4dc2-88a6-a96eb22923bc" class="">#2. 정적 자원 제공</h2><hr id="fcd5399a-8b87-4b2b-bc31-1bb4f937de3e"/><blockquote id="d9f5c87b-dbcd-4cfd-b697-3a477b8ae57a" class="">정적 자원(static asset)은 이미지, 폰트, 아이콘, 컴파일한 CSS 또는 JS파일과 같이 동적으로 변하지 않는 모든 종류의 파일을 의미한다.</blockquote><p id="39df0dd6-9815-48d3-ac4d-e0132f413fa6" class="">프로젝트의 /public 디렉터리 안에 저장하는 방식으로 클라이언트에 쉽게 제공된다.</p><p id="7b6e2ea1-38a5-46c9-bf0a-2c2cd4d6ff23" class="">정적 자원을 관리하고 제공하는 것은 생각보다 쉽지만 특정 유형의 파일은 웹 사이트의 성능과 SEO 점수에 큰영향을 미치는데, 이게 이미지 파일을 의미하는 것이다.</p><blockquote id="65595a66-2d5e-46f0-adc5-d07775a3d6ec" class=""><strong>누적 레이아웃 이동(Cumulative Layout Shift) CLS</strong>
+ - 최적화 되지 않은 이미지는 불러오는데 시간이 오래 걸리며, 불러온 이후의 주변 레이아웃이 변경되는 등 UX관점에서는 좋지 않다.</blockquote><h3 id="da5713e6-a06a-46de-bcf0-810a0a40af6b" class="">1. 자동이미지 최적화(Image 컴포넌트)</h3><p id="3bb5dfaa-b795-45f0-bbf5-c3e00059e572" class="">Next.js 10버전 이후로는 Image 컴포넌트를 통해 이미지를 자동으로 최적화가 가능하다.</p><p id="7e9625af-fa45-44e2-b4c8-47e9d4bfb9b0" class="">자동이미지 최적화의 장점은 클라이언트가 이미지를 요구할 때 최적화 할 수 있다는 점이다.
+(이미지 요청이 있을 때만 이미지 자동 최적화)</p><p id="60044df5-6908-4bcf-bf92-f2ac36a0cd4f" class="">
+</p><ul id="1a281226-9b02-4805-adc0-75d84feaf057" class="bulleted-list"><li style="list-style-type:disc"><strong>표준HTML 태그 VS Next.js 이미지 컴포넌트</strong><ul id="68608449-c6c9-41d6-b0b2-4373620ce49b" class="bulleted-list"><li style="list-style-type:circle">HTML<pre id="885bed6b-d91c-4066-a89c-370b74aa4412" class="code"><code>&lt;img src=&#x27;https:/images.unsplash.com/photo-1605460375648-278bcbd579a6&#x27; alt=&#x27;A beautiful English Setter&#x27; /&gt;</code></pre><p id="c31d3d53-5892-4d97-96ee-f9727a19d7aa" class="">HTML 에서는 img 태그를 쓰며, 속성 크기를 조절하기 위해서는 srcset 속성을 사용해서 최적화해야 한다.</p></li></ul><ul id="a9d53ac6-1aff-46f6-8f69-e746f571cd55" class="bulleted-list"><li style="list-style-type:circle">Next.js Image 컴포넌트<p id="f7843297-4d00-4cfb-8642-ac8f967e6c0f" class="">next.config.js 파일에 설정 추가 이후 Image 컴포넌트 사용 </p><figure class="block-color-blue_background callout" style="white-space:pre-wrap;display:flex" id="4f93490f-b85d-4769-a7d5-d4419e97f3a8"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><strong>만약 조금 더 명확한 주소를 설정하고 싶다면 domains 보다는 Remote Patterns를 사용하는 것이 좋다!</strong></div></figure><pre id="b757477f-8e04-45b9-9dbd-0e0eda0dd4f2" class="code"><code>module.exports = {
+	images: {
+		domains: [&#x27;images.unsplash.com&#x27;]
+	}
+}</code></pre><p id="108ad975-5d29-48d8-a6b6-617fa75b75a3" class="">layout 속성을 이용하여 이미지를 원하는 대로 자를 수 있다.<div class="indented"><ul id="8918304b-d861-4062-9e24-92b467728f82" class="bulleted-list"><li style="list-style-type:disc">fixed : 이미지 크기를 지정하면 더 크거나 작은 화면에서도 이미지 크기를 조절하지 않고 지정한 대로 유지한다.</li></ul><ul id="3587a8ac-1412-460c-993e-0a4fd564f6bb" class="bulleted-list"><li style="list-style-type:disc">responsive: fixed와 반대로 작동, 화면 크기를 조절하면 그에 따라 이미지를 최적화 제공</li></ul><ul id="5d608f81-4e83-480f-88a4-01d62a612992" class="bulleted-list"><li style="list-style-type:disc">intrinsic : fixed와 responsive를 절반씩 수용한다. 크기가 작은 화면에서는 이미지 크기 조절하지만, 큰 화면에서는 조절하지 않는다.</li></ul><ul id="a3bf25b0-83d7-48cc-be0c-653a146c3b6b" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-yellow_background"><strong>fill : 부모 요소의 가로 세로 크기에 따라 늘어난다. </strong></mark><mark class="highlight-yellow_background"><strong><span style="border-bottom:0.05em solid">(width, height 속성 설정한 내용이 무시된다.)</span></strong></mark></li></ul></div></p><figure id="2bfcd82b-37db-4955-82fa-def46ff5c823" class="image"><a href="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%205.png"><img style="width:837px" src="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%205.png"/></a></figure><figure class="block-color-blue_background callout" style="white-space:pre-wrap;display:flex" id="e72348c9-25d6-48f2-87d7-7fcd446b81da"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Next.js 10버전에서는 layout 속성을 제공했지만, 현재 (Ver 13)에서는 제공하지 않는다. 
+더불어 objectFit 속성도 제공되지 않고 있다.  (layout, objectFit 속성 사용시 브라우저 콘솔오류발생)
+layout의 다른 값은 모르겠으나, fill은 별도의 속성으로 대체, objectFit은 style 속성으로 이동되어졌다.</div></figure><figure id="872dcd2a-bbdc-4742-9856-b765564b1bf9" class="image"><a href="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%206.png"><img style="width:585px" src="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%206.png"/></a></figure></li></ul></li></ul><ul id="4d23b6d5-9c6d-4af3-8392-7ff2dc29c5d9" class="bulleted-list"><li style="list-style-type:disc"><strong>외부 서비스를 통한 자동 이미지 최적화</strong><ul id="c2f80df8-d8c6-4e49-95ae-d48b026e8ab9" class="bulleted-list"><li style="list-style-type:circle">외부서비스(다른 클라우드? 또는 CDN서버)를 공통적으로 사용하는 곳이 있다면, 
+next.config.json 파일을 loader 속성을 지정하여 외부 서비스를 통해 자동 이미지 최적화 작업을 처리한다.
+(Vercel로 배포하는 경우는 지정할 필요 없음)<figure id="556f9dfc-4c61-476b-831c-7f89f2e9b993" class="image"><a href="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%207.png"><img style="width:494px" src="2%20Next%20js%20%E1%84%80%E1%85%B5%E1%84%8E%E1%85%A9%E1%84%8B%E1%85%AA%20%E1%84%82%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%20%E1%84%8F%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A9%E1%84%82%E1%85%A5%E1%86%AB%E1%84%90%E1%85%B3%20ffed25632c9249449d93f79da5c0809a/Untitled%207.png"/></a></figure></li></ul><ul id="18f69d03-cd03-451e-8ab3-d78e08567c5b" class="bulleted-list"><li style="list-style-type:circle">일시적으로 컴포넌트 Or 페이지에서 외부서비스를 호출하는 경우는 loader 속성을 이용하여 진행한다.</li></ul><pre id="4c277d32-245b-4b28-b191-e9fafa64db99" class="code"><code>import Image from &quot;next/image&quot;;
+
+const loader = ({ src, width, quality }) =&gt;
+  `https://images.unsplash.com${src}?w=${width}&amp;q=${quality || 75}`;
+
+function Index() {
+  return (
+    &lt;div&gt;
+      &lt;Image
+        loader={loader}
+        src=&quot;/photo-1605460375648-278bcbd579a6&quot;
+        width={500}
+        height={200}
+        alt=&quot;A beautiful English Setter&quot;
+      /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default Index;</code></pre><ul id="9bc60744-19ff-4f20-8393-630eeadb5022" class="bulleted-list"><li style="list-style-type:circle">이미지는 정적으로 프로젝트에 위치한 파일을 불러오거나, 외부서비스를 호출하여 사용할 수 있다.</li></ul></li></ul><figure class="block-color-blue_background callout" style="white-space:pre-wrap;display:flex" id="6ebce0cd-797a-4729-be0d-f7fa6168b8fb"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">현재는 13버전을 Image 컴포넌트에서 제공하지 않는 속성들이 있다 
+만약 13버전 이전을 사용하고 싶다면 LegarcyImage 컴포넌트를 사용하면된다.</div></figure><ul id="5f367eec-ff53-412c-9350-1a69a39c94e8" class="bulleted-list"><li style="list-style-type:disc"><strong>Image 태그의 loading속성</strong><ul id="b692c0a2-d67b-4d83-9962-d5f05668d4ff" class="bulleted-list"><li style="list-style-type:circle">기존의 이미지 또는 loading이라는 속성을 사용하기 전에는 이미지를 네트워크 탭에서 미리 불러오는 작업을 진행한다. (불필요한 네트워크를 호출한다.)</li></ul><ul id="48ae5ed8-8de0-4a06-acb6-b25419a00eee" class="bulleted-list"><li style="list-style-type:circle">loading속성의 “lazy” 값을 선택하게 되면, 화면에 이미지 컴포넌트가 위치한 부분에 도달 할 경우 네트워크를 통해 이미지를 불러온다. </li></ul></li></ul><ul id="beb64634-d445-4e00-b8a4-2945c25a9b0e" class="bulleted-list"><li style="list-style-type:disc"><strong>13버전 Image 컴포넌트 vs LegacyImage 컴포넌트</strong><ul id="da012541-ffd7-4017-9347-62d50ccaa18d" class="bulleted-list"><li style="list-style-type:circle">13버전 Image<ul id="544dc635-4cef-4a1f-81bf-aac96a602f5d" class="bulleted-list"><li style="list-style-type:square">기존 이미지와 다르게 webp type의 이미지를 불러온다. 
+(webp타입은 용량이 적으며 이미지 최적화 시켜준다.)</li></ul><ul id="97807823-643c-4c90-901a-a2263d674817" class="bulleted-list"><li style="list-style-type:square">loading: lazy가 기본 값으로 설정 </li></ul><ul id="8bb19fe6-e2bb-48f1-a6be-50f14c67aa91" class="bulleted-list"><li style="list-style-type:square">placeholder=”blur”를 제공한다.  <mark class="highlight-yellow_background"><strong>테스트환경에서는 확인이 어렵다!</strong></mark>
+(blur 효과는 이미지를 불러오기 전에 우선적으로 배경색을 이미지와 동일하게 구성해주는 역할을 진행한다.)</li></ul><ul id="1cb4abbd-72b4-44aa-9eae-a1e920c148c6" class="bulleted-list"><li style="list-style-type:square">외부 이미지 URL을 사용할 경우 width는 필수로 입력해야 한다! 
+(정적 이미지 경로와 다르게 빌드 시 외부에서 불러오기 때문에 사이즈 조정이 필수다.)<p id="a022ace8-b5d4-43a9-92c2-19db06562629" class=""><span style="border-bottom:0.05em solid">이미지 사이즈를 미리 모를 경우 어떻게 해야하나? “fill” 속성을 이용하여 진행한다.</span></p></li></ul></li></ul><ul id="a9981199-8e26-41e0-8d52-d339d6bea4c6" class="bulleted-list"><li style="list-style-type:circle">13버전 이전 LegacyImage<ul id="ab709ed2-c666-4bd9-9937-db98fabf434c" class="bulleted-list"><li style="list-style-type:square">HTML 소스검사를 보면 이미지 태그 뿐만 아니라 span태그를 통해 layout을 스타일링 하고 있다. ( 직관적이지 않고 웹 표준에 어긋나는 방식 )</li></ul></li></ul></li></ul><h3 id="1ae625b8-2060-483f-928a-934702489b1f" class="">2. 메타데이터</h3><p id="782f52b6-c074-421f-b090-c553dd2f9e3b" class="">Head컴포넌트를 제공하여 메타데이터 또는 title등의 데이터를 쉽게 다를 수 있다.
+(동적으로 메타데이터, 링크, 스크립트 정보를 변경하고, 추가하고, 삭제 할 수 있다.)</p><pre id="6d6cec4f-e9f7-442e-b803-2ae35cc0e09a" class="code"><code>import Widget from &quot;@/components/Widget&quot;;
+import Head from &quot;next/head&quot;;
+import Link from &quot;next/link&quot;;
+
+function Index() {
+  return (
+    &lt;&gt;
+      &lt;Head&gt;
+        &lt;title&gt; Welcome to my Next.js website &lt;/title&gt;
+      &lt;/Head&gt;
+      &lt;div&gt;
+        &lt;Link href=&quot;/about&quot; passHref&gt;
+          About us
+        &lt;/Link&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+        &lt;Widget pageName=&quot;index&quot; /&gt;
+      &lt;/div&gt;
+    &lt;/&gt;
+  );
+}
+
+export default Index;</code></pre><pre id="15b054d0-a4b4-449c-b0fc-969f9e28e9a4" class="code"><code>import Widget from &quot;@/components/Widget&quot;;
+import Head from &quot;next/head&quot;;
+import Link from &quot;next/link&quot;;
+
+function AboutPage() {
+  return (
+    &lt;&gt;
+      &lt;Head&gt;
+        &lt;title&gt; About this website &lt;/title&gt;
+      &lt;/Head&gt;
+      &lt;div&gt;
+        &lt;Link href=&quot;/&quot; passHref&gt;
+          Back to home
+        &lt;/Link&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+        &lt;Widget pageName=&quot;about&quot; /&gt;
+      &lt;/div&gt;
+    &lt;/&gt;
+  );
+}
+
+export default AboutPage;</code></pre><pre id="7bd49742-f551-47c6-9bc2-fc358af4868f" class="code"><code>import Head from &quot;next/head&quot;;
+import { useState } from &quot;react&quot;;
+
+function Widget({ pageName }) {
+  const [active, setActive] = useState(false);
+
+  if (active) {
+    return (
+      &lt;&gt;
+        &lt;Head&gt;
+          &lt;title&gt;You&#x27;re brwsing the {pageName} page &lt;/title&gt;
+        &lt;/Head&gt;
+        &lt;div&gt;
+          &lt;button onClick={() =&gt; setActive(false)}&gt;
+            Restore original title
+          &lt;/button&gt;
+          Take a look at the title!
+        &lt;/div&gt;
+      &lt;/&gt;
+    );
+  }
+
+  return (
+    &lt;&gt;
+      &lt;button onClick={() =&gt; setActive(true)}&gt;Change page title&lt;/button&gt;
+    &lt;/&gt;
+  );
+}
+
+export default Widget;</code></pre><figure class="block-color-blue_background callout" style="white-space:pre-wrap;display:flex" id="f7ed81ec-a599-418e-b87b-b5c9b8ddb5f8"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><strong>passHref 
+</strong> - Link 컴포넌트 하단의 커스텀 링크태그 또는 a태그를 사용하게 될 경우 Link href속성 값을 a태그 Or 커스텀링크 href을 사용할 수 있도록 하는 Link 컴포넌트 속성이다.</div></figure><ul id="cf83b2ef-4494-4aad-836c-2af2826e2bf5" class="bulleted-list"><li style="list-style-type:disc">이점 <ul id="2e3650e0-cc0e-4b39-b77e-1ef53873492d" class="bulleted-list"><li style="list-style-type:circle">다른 컴포넌트에서 같은 메타 태그를 사용하는 경우가 있으며, 각 컴포넌트마다 모든 메타데이터와 관리 코드를 일일이 만들기에는 작업양이 많고 불편!</li></ul><ul id="75736b7f-9038-4ed3-b05e-d66edc9a2ee7" class="bulleted-list"><li style="list-style-type:circle">그룹화하여 특정 HTML태그를 다루는 컴포넌트를 만들어 사용할 수 있다.</li></ul></li></ul><ol type="1" id="c726b3c0-3e1e-4552-b91a-e165013e15f4" class="numbered-list" start="1"><li>공통 메타 태그 그룹</li></ol><ul id="83c5be2f-4608-4444-a5cd-f04404600dbd" class="bulleted-list"><li style="list-style-type:disc">SEO를 위해 웹 사이트에 많은 메타태그를 사용한다. 
+페이지 마다 다른 성향의 SEO를 위해서 페이지별 다르게 설정 할 수 있는데 Next.js에서도 각 컴포넌트로 구성하여 설정 할 수 있다.</li></ul><ul id="7b034a1c-6b50-41f4-98e8-a594818e4387" class="bulleted-list"><li style="list-style-type:disc">컴포넌트 별로도 구성이 가능하지만, 관리자사이트 또는 레이아웃이 고정되어 SEO를 구지 다양하게 설정할 필요가 없는 경우에는 _app.js 파일을 커스터마이징해서 사용 할 수 있다.</li></ul><pre id="03e48c6d-aeb7-43cd-a442-c212d96cdb6a" class="code"><code>// 공통 컴포넌트 구성
+import Head from &quot;next/head&quot;;
+
+function PostMeta(props) {
+  return (
+    &lt;Head&gt;
+      &lt;title&gt;{props.title}&lt;/title&gt;
+      &lt;meta name=&quot;description&quot; content={props.subtitle} /&gt;
+
+      {/* 오픈 그래프 메타데이터 */}
+      &lt;meta property=&quot;og:title&quot; content={props.title} /&gt;
+      &lt;meta property=&quot;og:description&quot; content={props.description} /&gt;
+      &lt;meta property=&quot;og:image&quot; content={props.image} /&gt;
+
+      {/* 트위터 카드 메타데이터 */}
+      &lt;meta name=&quot;twitter:card&quot; content=&quot;summary&quot; /&gt;
+      &lt;meta name=&quot;twitter:title&quot; content={props.title} /&gt;
+      &lt;meta name=&quot;twitter:description&quot; content={props.description} /&gt;
+      &lt;meta name=&quot;twitter.image&quot; content={props.image} /&gt;
+    &lt;/Head&gt;
+  );
+}
+
+export default PostMeta;
+
+// data
+export default [
+  {
+    id: &quot;qWD3Pzce&quot;,
+    slug: &quot;dog-of-the-day-the-english-setter&quot;,
+    title: &quot;Dog of the day: the English Setter&quot;,
+    subtitle:
+      &#x27;The English Setting dog breed was named for these dogs\&#x27; practice of &quot;setting&quot;, or crouching low, then they found birds so hunters could throw therir nets over them&#x27;,
+    image: &quot;https://images.unsplash.com/photo-1605460375648-278bcbd579a6&quot;,
+  },
+];
+
+// [slug].js
+import PostMeta from &quot;@/components/PostHead&quot;;
+import posts from &quot;@/data/posts&quot;;
+
+export function getServerSideProps({ params }) {
+  const { slug } = params;
+  const post = posts.find((p) =&gt; p.slug === slug);
+
+  return {
+    props: {
+      post,
+    },
+  };
+}
+
+function Post({ post }) {
+  return (
+    &lt;div&gt;
+      &lt;PostMeta {...post} /&gt;
+      &lt;h1&gt;{post.title}&lt;/h1&gt;
+      &lt;p&gt;{post.substitle}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default Post;</code></pre><h2 id="5caa98ff-9bbb-4669-ac01-1f83555ded85" class="">#3. _app.js와 _document.js 페이지 커스터마이징</h2><hr id="dadb14d6-9a3a-457d-8873-4d8281f027f8"/><p id="91e0f2fa-1525-425e-93ef-992ca3be2ae8" class="">웹 애플리케이션의 성향 성격에 따라서 별도의 초기화 작업을 진행해야 하는 경우가 발생 될 수 있다. pages 디렉터리 안의 _app.js, _document.js 를 별도로 생성하여  초기화 시 진행해야할 대상들을 설정할 수 있다.</p><ul id="e7ff934d-ab35-4834-a371-fb5f64409af5" class="bulleted-list"><li style="list-style-type:disc">전역 스타일 추가</li></ul><ul id="dd724969-ab69-4a47-9e60-54f39b042084" class="bulleted-list"><li style="list-style-type:disc"> 페이지 레이아웃 관리</li></ul><ul id="2ecd064e-27c4-42d1-b0d3-1b118e4180dc" class="bulleted-list"><li style="list-style-type:disc"> 페이지 속성에 데이터 추가</li></ul><h3 id="483e6675-6a81-46d8-a957-7568855af10e" class="">1. _app.js</h3><p id="3ae35c80-e9e8-4795-b758-d296a0216f6a" class="">주로  레이아웃 관리나 전역 스타일 추가하는 부분에서 많이 사용한다고 한다.
+책에서도 주된 사용 목적은 페이지 이동시의 상태 유지 (테마나 장바구니 등) 레이아웃관리, 페이지 속성에 대한 데이터를 추가하는 작업을 진행한다는 것이다.</p><pre id="e90a519c-0e36-403d-accd-252b03484e46" class="code"><code>// components/Navbar.js
+import Link from &quot;next/link&quot;;
+import { useContext } from &quot;react&quot;;
+import ThemeContext from &quot;./themeContext&quot;;
+
+function NavBar() {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+  const newThemeName = theme === &quot;dark&quot; ? &quot;light&quot; : &quot;dark&quot;;
+
+  return (
+    &lt;div
+      style={{
+        display: &quot;flex&quot;,
+        flexDirection: &quot;row&quot;,
+        justifyContent: &quot;space-between&quot;,
+        marginBottom: 25,
+      }}
+    &gt;
+      &lt;div&gt;My Website&lt;/div&gt;
+      &lt;div&gt;
+        &lt;Link href=&quot;/&quot;&gt;Home &lt;/Link&gt;
+        &lt;Link href=&quot;/about&quot;&gt;About &lt;/Link&gt;
+        &lt;Link href=&quot;contacts&quot;&gt;Contacts&lt;/Link&gt;
+        &lt;button onClick={toggleTheme}&gt;Set {newThemeName} theme&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default NavBar;
+
+// pages/_app.js
+import NavBar from &quot;@/components/Navbar&quot;;
+import &quot;../styles/globals.css&quot;;
+import { useState } from &quot;react&quot;;
+import ThemeContext from &quot;@/components/themeContext&quot;;
+
+const themes = {
+    dark: {
+        background: &#x27;black&#x27;,
+        color: &#x27;white&#x27;
+    },
+    light: {
+        background: &#x27;white&#x27;,
+        color: &#x27;black&#x27;
+    }
+};
+
+function MyApp({ Component, pageProps }) {
+  const [theme, setTheme] = useState(&#x27;light&#x27;);
+  const toggleTheme = () =&gt; {
+    setTheme(theme === &#x27;dark&#x27; ? &#x27;light&#x27; : &#x27;dark&#x27;);
+  };
+
+  return (
+    &lt;ThemeContext.Provider value={{ theme, toggleTheme }}&gt;
+      &lt;div style={{
+        width: &#x27;100%&#x27;,
+        minHeight: &#x27;100vh&#x27;,
+        ...themes[theme]
+      }}&gt;
+        &lt;NavBar /&gt;
+        &lt;Component {...pageProps} /&gt;
+      &lt;/div&gt;
+    &lt;/ThemeContext.Provider&gt;
+  );
+}
+
+export default MyApp;
+
+// compoents/themeContext.js
+const { createContext } = require(&quot;react&quot;);
+
+const ThemeContext = createContext({
+  theme: &quot;light&quot;,
+  toggleTheme: () =&gt; null,
+});
+
+export default ThemeContext;</code></pre><p id="a9da2ae2-67fd-4eff-82e0-58c143c26bf5" class="">
+</p><p id="5a294256-d23a-4e62-9f77-a8781a9a81b6" class="">다만 주의사항으로는 다른 페이지 처럼 서버에서 데이터를 불러오는 getServerSideProps 또는 getStaticProps와 같은 함수를 이용 할 수 없다. ( 즉 정적 구성요소로 설정되어야 한다? )</p><p id="95930b93-ca56-4dde-ad65-14df24d77755" class=""><span style="border-bottom:0.05em solid">꼭 사용해야한다면 getInitialProps 함수를 사용하면 되나, 그에 대한 댓가를 치루게 된다.
+모든 페이지를 서버에서 렌더링 하기 때문에 동적 페이지에 대한 정적 최적화를 진행하지 않는다!</span></p><p id="51c7e74d-0666-4d4b-88ce-6572b988b653" class="">
+</p><h3 id="d3eeb4b3-00a5-443b-84da-793e06e6b3a6" class="">2. _document.js</h3><p id="64d0562f-9ec3-46c5-a17a-77393068498c" class="">&lt;html&gt;&lt;head&gt;&lt;body&gt;와 같은 기본적인 HTML 태그를 정의할 필요가 필요 없이 이 파일을 통해 진행한다. (레이아웃 틀 적용?)</p><ul id="bfc44aee-d0b7-46c1-8e01-383441b31b31" class="bulleted-list"><li style="list-style-type:disc">Html (’next/document’)<ul id="26851c28-3111-4628-b9e7-4c90de037c36" class="bulleted-list"><li style="list-style-type:circle">&lt;html&gt; 태그에 해당, lang과 같은 표준 HTML 속성 설정</li></ul></li></ul><ul id="a0d28a50-4fcd-4e0f-a467-defa164842e4" class="bulleted-list"><li style="list-style-type:disc">Head(’next/document’)<ul id="22d118cb-6442-4318-92fc-37f84cc60203" class="bulleted-list"><li style="list-style-type:circle">웹 사이트의 모든 페이지에서 공통으로 사용되는 코드가 있을 때 사용</li></ul></li></ul><ul id="bd2ee306-6b81-4bfc-9589-72cf5c6c2aff" class="bulleted-list"><li style="list-style-type:disc">Main(’next/document’)<ul id="18195199-ec80-49e2-a382-84b6e8793e5e" class="bulleted-list"><li style="list-style-type:circle">외부의 컴포넌트는 브라우저에서 초기화되지 않기 때문에 페이지 간에 공통으로 사용되는 컴포넌트가 있다면 반드시 _app.js 파이에 해당 컴포넌트 사용해야한다.</li></ul></li></ul><p id="5c7fd4b7-4347-4aa8-85ae-a1680d44b9c5" class="">
+</p><p id="dbb756ec-70ae-4a5d-a22a-052cbfb5dd9c" class="">_app.js와 같이  getServerSideProps 또는 getStaticProps와 같은 함수를 이용 할 수 없다. ( 즉 정적 구성요소로 설정되어야 한다? )</p></div></article></body></html>
